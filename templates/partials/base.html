@@ -18,6 +18,9 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/slider-range.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+    <!-- jQuery CDN-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -611,6 +614,21 @@
                         </div>
                     </div>
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}">
+                            <strong>{{ message }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <!-- Remove the Alert after 3 seconds -->
+                <script>
+                    setTimeout (() => {
+                        $(".alert").fadeTo(1000, 0, function(){
+                            $(this).slideUp();
+                        })
+                    }, 3000);
+                </script>
             </div>
         </div>
     </header>
