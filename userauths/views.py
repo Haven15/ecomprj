@@ -3,9 +3,7 @@ from userauths.forms import UserRegisterForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
-
-#AUTH_USER_MODEL is from ecomprj/settings.py
-User = settings.AUTH_USER_MODEL
+from userauths.models import User
 
 def register_view(request):
     
@@ -43,29 +41,24 @@ def login_view(request):
             #First email is from userauths/models.py
             #Second email is local variable
             user = User.objects.get(email=email)
+
+            #Automatically login the user if login email exists.
+            #first email and password is from userauths/models.py
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                #Login function of django
+                login(request, user)
+                messages.success(request, "You are logged in.")
+                #Redirect to home page
+                return redirect("core:index")
+            else:
+                messages.warning(request, "User Does Not Exist. Create an account.")
         except:
             #f is formatted string
             messages.warning(request, f"User with {email} does not exist.")
 
-        #Automatically login the user if login email exists.
-        #first email and password is from userauths/models.py
-        user = authenticate(request, email=email, password=password)
-
-        if user is not None:
-            #Login function of django
-            login(request, user)
-            messages.success(request, "You are logged in.")
-            #Redirect to home page
-            return redirect("core:index")
-        else:
-            messages.warning(request, "User Does Not Exist. Create an account.")
-    
-    #Currently empty, we can add something in the future
-    context = {
-
-    }
-
-    return render(request, "userauths/sign-in.html", context)
+    return render(request, "userauths/sign-in.html")
 
 def logout_view(request):
     #Request is whoever user is logged in.
