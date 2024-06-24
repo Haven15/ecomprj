@@ -1,5 +1,33 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, ProductImages, WishList, ProductReview, Address
+
+
 def index(request):
-    return render(request, 'core/index.html')
+    #products = Product.objects.all().order_by("-id")
+    products = Product.objects.filter(product_status="published", featured=True)
+
+    context = {
+        "products": products
+    }
+
+    return render(request, 'core/index.html', context)
+
+def product_filter_view(request):
+    products = Product.objects.filter(product_status="published")
+
+    context = {
+        "products": products
+    }
+
+    return render(request, 'core/product-filter.html', context)
+
+def category_list_view(request):
+    categories = Category.objects.all()
+
+    context = {
+        "categories": categories
+    }
+
+    return render(request, 'core/category-list.html', context)
