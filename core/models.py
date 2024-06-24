@@ -82,7 +82,7 @@ class Product(models.Model):
 
     #Whenever a user is deleted, the shop or vendor of that product will be changed to null
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True) #Product Vendor
 
     title = models.CharField(max_length=100, default="Fresh Pear") #Title, Heading
