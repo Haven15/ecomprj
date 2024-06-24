@@ -50,7 +50,7 @@ class Vendor(models.Model):
     vid = ShortUUIDField(unique=True, length=10, max_length=20, alphabet="abcdefgh12345")
 
     title = models.CharField(max_length=100, default="Nestify") #Title, Heading
-    image = models.ImageField(upload_to=user_directory_path, default="product.jpg") #Image uploaded will be uploaded to user directory path folder(automatically created)
+    image = models.ImageField(upload_to=user_directory_path, default="vendor.jpg") #Image uploaded will be uploaded to user directory path folder(automatically created)
     description = models.TextField(null=True, blank=True, default="I am an amazing Vendor")
 
     address = models.CharField(max_length=100, default="123 Main Street.")
@@ -83,12 +83,13 @@ class Product(models.Model):
     #Whenever a user is deleted, the shop or vendor of that product will be changed to null
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True) #Product Vendor
 
     title = models.CharField(max_length=100, default="Fresh Pear") #Title, Heading
     image = models.ImageField(upload_to=user_directory_path, default="product.jpg") #Image uploaded will be uploaded to user directory path folder(automatically created)
     description = models.TextField(null=True, blank=True, default="This is the product")
 
-    price = models.DecimalField(max_digits=999999999999, decimal_places=2, default="1.99") #ex. 20.99
+    price = models.DecimalField(max_digits=999999999999, decimal_places=2, default="0.0") #ex. 20.99
     old_price = models.DecimalField(max_digits=999999999999, decimal_places=2, default="2.99") #ex. 20.99
 
     specifications = models.TextField(null=True, blank=True)
@@ -123,7 +124,7 @@ class Product(models.Model):
 
 class ProductImages(models.Model):
     images = models.ImageField(upload_to="product-images", default="product.jpg")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name="p_images", on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
