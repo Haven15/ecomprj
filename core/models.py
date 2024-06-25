@@ -66,6 +66,7 @@ class Vendor(models.Model):
 
     #Whenever a user is deleted, the shop or vendor of that user will be changed to null
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    founded = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Vendors"
@@ -83,7 +84,7 @@ class Product(models.Model):
     #Whenever a user is deleted, the shop or vendor of that product will be changed to null
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
-    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True) #Product Vendor
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name="product") #Product Vendor
 
     title = models.CharField(max_length=100, default="Fresh Pear") #Title, Heading
     image = models.ImageField(upload_to=user_directory_path, default="product.jpg") #Image uploaded will be uploaded to user directory path folder(automatically created)
