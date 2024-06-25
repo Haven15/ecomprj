@@ -45,11 +45,24 @@ def product_category_list_view(request, cid):
 
 def vendor_list_view(request):
     vendors = Vendor.objects.all()
-    products = Product.objects.filter(product_status="published", vendor=2)
 
     context = {
-        "vendors": vendors,
-        "products": products
+        "vendors": vendors
     }
 
     return render(request, 'core/vendors-list.html', context)
+
+def vendor_detail_view(request, vid):
+    vendor = Vendor.objects.get(vid=vid)
+    products = Product.objects.filter(product_status="published", vendor=vendor)
+    categories = Category.objects.all()
+    vendor_categories = Category.objects.filter(category__in=products).distinct()
+
+    context = {
+        "vendor": vendor,
+        "products": products,
+        "categories": categories,
+        "vendor_categories": vendor_categories
+    }
+
+    return render(request, 'core/vendor-details-2.html', context)
