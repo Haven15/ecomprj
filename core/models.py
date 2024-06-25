@@ -51,6 +51,7 @@ class Vendor(models.Model):
 
     title = models.CharField(max_length=100, default="Nestify") #Title, Heading
     image = models.ImageField(upload_to=user_directory_path, default="vendor.jpg") #Image uploaded will be uploaded to user directory path folder(automatically created)
+    cover_image = models.ImageField(upload_to=user_directory_path, default="vendor.jpg")
     description = models.TextField(null=True, blank=True, default="I am an amazing Vendor")
 
     address = models.CharField(max_length=100, default="123 Main Street.")
