@@ -4,9 +4,6 @@ from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, Pr
 logger = logging.getLogger(__name__)
 
 def default(request):
-    logger.warning(f'Request user: {request.user}')
-    logger.warning(f'Is authenticated: {request.user.is_authenticated}')
-
     categories = Category.objects.all()
     
     address = None
