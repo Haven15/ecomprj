@@ -354,7 +354,8 @@
                         <ul>
                             {% for c in vendor_categories %}
                             <li>
-                                <a href="{% url 'core:product-category-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" />{{ c.title }}</a><span class="count">{{c.category.count}}</span>
+                                <a href="{% url 'core:product-category-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" />{{ c.title }}</a>
+                                <span class="count">{{c.category.count}}</span>
                             </li>
                             {% endfor %}
                         </ul>

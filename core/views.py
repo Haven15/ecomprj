@@ -66,3 +66,18 @@ def vendor_detail_view(request, vid):
     }
 
     return render(request, 'core/vendor-details-2.html', context)
+
+def product_detail_view(request, pid):
+    product = Product.objects.get(pid=pid)
+    products = Product.objects.filter(product_status="published", vendor=product.vendor)
+    #productr = get_object_or_404(Product, pid=pid) same with "Product.objects.get(pid=pid)"
+    p_image = product.p_images.all() #Get all product images, p_image = ProductImages related name
+    vendor_categories = Category.objects.filter(category__in=products).distinct()
+
+    context = {
+        "p": product,
+        "p_image": p_image,
+        "vendor_categories": vendor_categories,
+    }
+
+    return render(request, 'core/product-detail.html', context)
