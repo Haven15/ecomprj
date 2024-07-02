@@ -171,3 +171,15 @@ def get_rating_statistics():
     rating_stats_list = sorted(rating_stats.values(), key=lambda x: x['rating'], reverse=True)
     
     return rating_stats_list
+
+def search_view(request):
+    query = request.GET.get("q")
+
+    products = Product.objects.filter(title__icontains=query, description__icontains=query).order_by("-date") # fresh pear -> pear
+
+    context = {
+        "products": products,
+        "query": query,
+    }
+
+    return render(request, "core/search.html", context)
