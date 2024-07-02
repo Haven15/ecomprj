@@ -49,7 +49,9 @@ $("#commentForm").submit(function(e){
                 _html +=        '</div>'
                 _html +=    '</div>'
                 _html +='</div>'
-                $(".comment-list").prepend(_html)
+                $(".comment-list").prepend(_html);
+
+                
             }
             
         }

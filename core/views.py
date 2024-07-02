@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.db.models import Avg
+from django.db.models import Count, Avg
 from taggit.models import Tag
 
 from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, ProductImages, WishList, ProductReview, Address
@@ -88,6 +88,9 @@ def product_detail_view(request, pid):
     #Getting average reviews
     average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
 
+    #Get Rating Statistics
+    rating_stats = get_rating_statistics()
+    
     make_review = True
 
     if request.user.is_authenticated:
@@ -100,6 +103,7 @@ def product_detail_view(request, pid):
         "p": product,
         "make_review": make_review,
         "review_form": review_form,
+        "rating_stats": rating_stats,
         "p_image": p_image,
         "vendor_categories": vendor_categories,
         "related_products": products_categories,
@@ -148,3 +152,22 @@ def ajax_add_review(request, pid):
         "context": context,
         "average_reviews": average_reviews
     })
+
+def get_rating_statistics():
+    # Initialize all possible ratings with zero counts
+    rating_stats = {i: {'rating': i, 'count': 0, 'percentage': 0} for i in range(1, 6)}
+    
+    total_reviews = ProductReview.objects.count()
+    
+    # Get actual counts from the database
+    actual_stats = ProductReview.objects.values('rating').annotate(count=Count('rating')).order_by('rating')
+    
+    # Update the initialized stats with actual counts
+    for stat in actual_stats:
+        rating_stats[stat['rating']]['count'] = stat['count']
+        rating_stats[stat['rating']]['percentage'] = (stat['count'] / total_reviews) * 100 if total_reviews > 0 else 0
+
+    #Convert to a list and sort by rating in descending order
+    rating_stats_list = sorted(rating_stats.values(), key=lambda x: x['rating'], reverse=True)
+    
+    return rating_stats_list
